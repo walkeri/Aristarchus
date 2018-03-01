@@ -1,0 +1,13 @@
+;; setting up data
+
+(star sun (kg 1.989e30))
+(planet earth (kg 5.972 × 10^24) #:radius (mi 3,959)
+                                 #:orbits sun
+                                 #:distance (au 1))
+
+;; questions
+
+(escape-velocity earth)
+
+(L2 sun earth) ;; Finds the L2 Lagrange point
+
