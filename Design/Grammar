@@ -1,0 +1,17 @@
+Aristarchus Grammar:
+
+program = def ... expr ...
+
+    def = (define-body expr expr expr)
+        | (define-satellite expr expr)
+        | (define-connection expr expr expr)
+        | (define-system expr expr ...)
+
+   expr = identifier
+        | value
+        | (primitive expr expr ...)
+        | (langrage expr expr)
+ 	| (esc-vel expr)
+        | (surface-gravity expr)
+	| (kepler3 expr)
+
