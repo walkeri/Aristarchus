@@ -1,17 +1,23 @@
 Aristarchus Grammar:
 
-program = def ... expr ...
+program = def ... question ...
 
-    def = (define-body expr expr expr)
-        | (define-satellite expr expr)
-        | (define-connection expr expr expr)
-        | (define-system expr expr ...)
 
-   expr = identifier
-        | value
-        | (primitive expr expr ...)
-        | (langrage expr expr)
- 	| (esc-vel expr)
-        | (surface-gravity expr)
-	| (kepler3 expr)
+def = (body Identifier Number Number)
+    | (satellite Identifier Number)
+    | (connection Identifier Identifier Identifier Number)
+    | (define-system Identifier Variable ...)
+
+
+
+question = variable 
+         | (lagrange variable variable)
+         | (L1 variable variable)
+         | (L2 variable variable)
+         | (L3 variable variable)
+         | (L4 variable variable)
+         | (L5 variable variable)
+         | (kepler3-period variable variable)
+         | (escape-velocity variable)
+         | (surface-gravity variable)
 

@@ -1,9 +1,8 @@
 ;; setting up data
 
-(star sun (kg 1.989e30))
-(planet earth (kg 5.972 × 10^24) #:radius (mi 3,959)
-                                 #:orbits sun
-                                 #:distance (au 1))
+(body sun 1.989e30 6.957e5)
+(body earth 5.972e24 6371)
+(connection sun earth 149597870)
 
 ;; questions
 

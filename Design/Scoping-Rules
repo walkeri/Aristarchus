@@ -1,11 +1,10 @@
 Aristarchus Scoping Rules:
 
-(define-body identifier expr expr) | binds identifier in the program, but not inside of the define.
+(Body Identifier Number Number) | binds the identifier in the rest of the program.
 
-(define-satellite identifier expr) | binds identifier in the program, but not inside of the define.
+(satellite Identifier Number) | binds the identifier in the program, but not inside of the define.
 
-(define-connection identifier expr expr expr) | binds identifier in the program, but not inside of the define.
+(connection Identifier Identifier Identifier Number) | binds identifier in the program.
 
-(define-system identifier expr expr ...) | binds idetntifier in the program, but not inside of the define.
-
+(define-system Identifier Variable ...) | binds idetntifier in the program, but not inside of the define-system
 

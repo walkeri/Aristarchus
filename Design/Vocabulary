@@ -1,16 +1,8 @@
 Aristarchus Vocabulary:
 
-    - A Name or a Variable is a sequence of characters, excluding spaces or special characters.
+A Name or a Variable is a sequence of characters, excluding spaces or special characters.
 
-    - A primitive is a name that has a pre-defined meaning.
+An Identifier is a name that does not have a pre-defined meaning.
 
-    - An identifier is a name that does not have a pre-defined meaning.
-
-A Number is one of:
- -- Rational Number
- -- Inexact Number
-
-Numbers can be represented as integers, fractions, or decimals.
-
-A String is either an empty string or a sequence of characters surrounded by "'s
+Numbers are real numbers, which can be represented as integers, fractions, or decimals. We plan to add units, in some form.
 
