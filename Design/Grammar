@@ -4,7 +4,6 @@ program = def ... question ...
 
 
 def = (body Identifier Number Number)
-    | (satellite Identifier Number)
     | (connection Identifier Identifier Identifier Number)
     | (define-system Identifier Variable ...)
 
