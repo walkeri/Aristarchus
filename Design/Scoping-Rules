@@ -1,6 +1,6 @@
 Aristarchus Scoping Rules:
 
-(Body Identifier Number Number) | binds the identifier in the rest of the program.
+(body Identifier Number Number) | binds the identifier in the rest of the program.
 
 (connection Identifier Identifier Identifier Number) | binds identifier in the rest of the program.
 
