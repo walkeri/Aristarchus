@@ -5,7 +5,7 @@ program = def ... question ...
 
 def = (body Identifier Number Number)
     | (connection Identifier Identifier Identifier Number)
-    | (define-system Identifier Variable ...)
+    | (system Identifier [Listof Variable])
 
 
 
