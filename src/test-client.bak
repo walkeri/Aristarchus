@@ -2,9 +2,9 @@
 
 (module+ test (require rackunit))
 
-(body sun 1.989e+30 6.957e+8)
+(body sun 12 10)
 
-(body earth 5.972e+24 6.3781e+6)
+(body earth 2 1)
 
 (connection earth-sun sun earth 100)
 
@@ -14,21 +14,17 @@
 
 (module+ test
   (check-equal? (body-mass sun)
-                1.989e+30)
+                12)
   (check-equal? (body-radius sun)
-                6.957e+8)
+                10)
   (check-equal? (body-mass earth)
-                5.972e+24)
+                2)
   (check-equal? (body-radius earth)
-                6.3781e+6)
+                1)
   (check-equal? (connection-distance earth-sun)
                 100)
   (check-equal? (system-loname solar)
-                '(earth-sun))
-  (check-equal? (< (- (surface-gravity sun) 274.272576468)  0.0001)
-                  true)
-  (check-equal? (< (- (surface-gravity earth) 9.807)  0.0001)
-                  true))
+                '(earth-sun)))
   
 
 

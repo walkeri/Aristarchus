@@ -6,8 +6,6 @@
 (provide
 
  (all-from-out racket)
-
- ;;------------------------------ Definitions ----------------------------------
  
  ;; Name Number Number -> #<procedure:Name>
  body
@@ -36,15 +34,8 @@
 
  ;; System -> [Listof Name]
  system-loname
-
- ;; ---------------------------- Questions --------------------------------------
-
- ;; Name -> Number
- surface-gravity
- 
  )
 
-;;------------------------------ Definitions ------------------------------------
 
 ;; A Name is a name of a body, represented as an identifier
 
@@ -104,17 +95,3 @@
   (syntax-parser
     [(_ system)
      #'(system-struct-loname system)]))
-
-;;-------------------------------- Questions ------------------------------------
-
-(define G 6.6740831e-11)
-
-(define-syntax surface-gravity
-  (syntax-parser
-    [(_ body)
-    #'(/ (* G (body-mass body)) (sqr (body-radius body)))]))
-
-
-
-
-    
