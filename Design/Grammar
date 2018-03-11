@@ -10,13 +10,13 @@ def = (body Identifier Number Number)
 
 
 question = variable 
-         | (lagrange variable variable)
-         | (L1 variable variable)
-         | (L2 variable variable)
-         | (L3 variable variable)
-         | (L4 variable variable)
-         | (L5 variable variable)
-         | (kepler3-period variable variable)
+         | (lagrange variable)
+         | (L1 variable)
+         | (L2 variable)
+         | (L3 variable)
+         | (L4 variable)
+         | (L5 variable)
+         | (kepler3-period variable)
          | (escape-velocity variable)
          | (surface-gravity variable)
 
