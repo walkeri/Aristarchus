@@ -1,0 +1,9 @@
+#lang s-exp "units.rkt"
+
+(require turnstile/rackunit-typechecking)
+
+(check-type (body-struct (assign-unit 5 mass) (assign-unit 6 distance)) : body-type)
+
+(body sun (assign-unit 5 mass) (assign-unit 4 distance))
+
+(check-type (body-struct-mass sun) : mass)

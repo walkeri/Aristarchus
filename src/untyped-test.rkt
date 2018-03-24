@@ -1,4 +1,4 @@
-#lang s-exp "main.rkt"
+#lang s-exp "untyped-main.rkt"
 
 (module+ test (require rackunit))
 
@@ -51,7 +51,6 @@
                 (posn 74799550825.28027 -129557400406.15201)))
 
 (lagrange earth-sun)
-
 
 
 

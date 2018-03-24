@@ -1,0 +1,73 @@
+#lang turnstile/quicklang
+
+(require (prefix-in m: "main.rkt"))
+
+(provide
+
+ assign-unit
+ body-type
+ connection-type
+ system-type
+ distance
+ mass
+ vel
+ accel
+ number
+ time
+ coordinate
+
+ (rename-out [typed-datum #%datum]
+             [typed-app #%app])
+ 
+ (typed-out [[m:body-struct : (-> mass distance body-type)]  body-struct]
+            [[m:body-struct-mass : (-> body-type mass)]  body-struct-mass]
+            [[m:body-struct-mass : (-> body-type distance)] body-struct-radius])
+
+ body
+ )
+
+(define-base-types
+  body-type
+  connection-type
+  system-type
+  distance
+  mass
+  vel
+  accel
+  number
+  time
+  coordinate)
+
+(define-type-constructor -> #:arity > 0)
+
+(define-typed-syntax assign-unit
+  [(_ e t) ≫
+           [⊢ e ≫ e- ⇐ t]
+           ---------------
+           [⊢ e- ⇒ t]])
+
+(define-typed-syntax body
+  [(_ name:id mass radius)≫
+   ------------------------
+   [≻ (begin
+        (define-syntax name
+          (make-variable-like-transformer
+           (assign-type #'internal-name #'body-type)))
+        (m:body internal-name mass radius))]])
+
+(define-typed-syntax typed-datum
+  [(_ . x)≫
+   ---------------
+   [#:error "could infer the unit"]]
+  [(_ . x)⇐ τ ≫
+   ---------------
+   [⊢ (#%datum- . x)]])
+
+(define-typed-syntax typed-app
+  [(_ f e ...)≫
+   [⊢ f ≫ f- ⇒ (~-> τin ... τout)]
+   #:fail-unless (= (stx-length #'(e ...)) (stx-length #'(τin ...)))
+   "number of given arguments incorrect"
+   [⊢ e ≫ e- ⇐ τin] ...
+   ---------------
+   [⊢ (#%app f- e- ...) ⇒ τout]]) 
