@@ -1,7 +1,8 @@
 #lang racket
 
 (require (for-syntax syntax/parse)
-         (prefix-in un: racket))
+         (prefix-in un: racket)
+         htdp/matrix)
 
 (provide
 
@@ -168,6 +169,11 @@
     [(_ body)
      #'(/ (* G (body-mass body)) (sqr (body-radius body)))]))
 
+(define-syntax surface-gravity-out
+  (syntax-parser
+    [(_ body)
+     #'`(/ ,(* G (body-mass body)) ,(sqr (body-radius body)))]))
+
 (define-syntax escape-velocity
   (syntax-parser
     [(_ body)
@@ -250,11 +256,12 @@
 (define-syntax lagrange
   (syntax-parser
     [(_ connect)
-     #'(begin (displayln (L1 connect))
-              (displayln (L2 connect))
-              (displayln (L3 connect))
-              (displayln (L4 connect))
-              (displayln (L5 connect)))]))
+     #'(make-matrix 5 5
+                    `(L1: x: ,(posn-x (L1 connect)) y: ,(posn-y (L1 connect))
+                      L2: x: ,(posn-x (L2 connect)) y: ,(posn-y (L2 connect))
+                      L3: x: ,(posn-x (L3 connect)) y: ,(posn-y (L3 connect))
+                      L4: x: ,(posn-x (L4 connect)) y: ,(posn-y (L4 connect))
+                      L5: x: ,(posn-x (L5 connect)) y: ,(posn-y (L5 connect))))]))
 
 ;;-------------------------------- Conversions ----------------------------------
 

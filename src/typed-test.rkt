@@ -29,4 +29,4 @@
 (check-type (L5 earth-sun) : coordinate)
 (check-type (lagrange earth-sun) : void)
 
-
+(lagrange earth-sun)
