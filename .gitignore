@@ -1,0 +1,15 @@
+
+# Created by https://www.gitignore.io/api/racket
+
+### Racket ###
+*.rkt~
+*.rkt.bak
+\#*.rkt#
+\#*.rkt#*#
+*.dep
+*.zo
+
+compiled
+
+
+# End of https://www.gitignore.io/api/racket
