@@ -2,7 +2,8 @@
 
 (require (for-syntax syntax/parse)
          (prefix-in un: racket)
-         htdp/matrix)
+         htdp/matrix
+         (submod "formulatex.rkt"))
 
 (provide
 
@@ -164,6 +165,11 @@
 
 (define G 6.6740831e-11)
 
+(formula surface-gravity (G mass radius)
+         (/ (* ,G ,mass) (sqr ,radius)))
+
+
+#;
 (define-syntax surface-gravity
   (syntax-parser
     [(_ body)

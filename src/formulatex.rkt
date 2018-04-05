@@ -1,8 +1,9 @@
 #lang racket
 
-(require (for-syntax syntax/parse))
+(require (for-syntax syntax/parse
+                     racket/syntax))
 
-#;(provide
+(provide
 
  ;; Name [Listof Name] Math-s-expression
  ;; A definitional form that binds name to the function made by the s-expression,
@@ -10,18 +11,16 @@
  ;; of LaTeX.
  formula)
 
-
-(define-syntax formula
-  (syntax-parser
+(define-syntax (formula stx)
+  (syntax-parse stx
     [(_ name args body)
      #`(begin
-         (define name (lambda args (eval `body (make-base-namespace))))
-         (define #,(string-append 'a #'name) (lambda args (latexpression->string (math-s-exp->latexpression body)))))]))
+         (define name (lambda args (eval `body (current-namespace))))
+         (define #,(format-id stx "~a-latex" #'name) (lambda args (latexpression->string (math-s-exp->latexpression `body)))))]))
 
-#;(formula ev (grav-const mass-body radius)
+;; For example:
+(formula ev (grav-const mass-body radius)
          (sqrt (/ (* 2 ,grav-const ,mass-body) ,radius)))
-
-;(ev 10 20 30)
 
 ;; A Latexpression is one of:
 ;; - String
@@ -30,7 +29,7 @@
 ;; - (list 'keep-flat [Listof Latexpression])
 ;; - (list Symbol [Listof Latexpression] ...)
 
-;; Corresponds to "\frac{G \times M_b}{r^2}"
+;; Corresponds to someting like: \frac{G \times M_b}{r^2}
 (define example-latexpression
   '(frac {G (times) M_b} {r^2}))
 
@@ -61,12 +60,6 @@
 (define (wrap-in-braces s)
   (string-append "{" s "}"))
 
-example-latexpression
-;(printf (latexpression-list->string '{G (times) M_b}))
-(printf "\n\n")
-;(printf (latexpression->string example-latexpression))
-(printf "\n\n")
-
 ;; A Math-s-expression is one of:
 ;; - (+ Math-body Math-body ...)
 ;; - (- Math-body ...)
@@ -75,7 +68,6 @@ example-latexpression
 ;; - (sqrt Math-body)
 ;; - (sqr Math-body)
 ;; - (expt Math-body Math-body)
-
 
 ;; A Math-body is one of:
 ;; - Math-s-expression
@@ -91,17 +83,20 @@ example-latexpression
     [else (math-s-exp->latexpression m)]))
 
 (define (math-s-exp->latexpression m)
-  (match m ;(cons (first m) (map math-body->latexpression (rest m)))
+  (match m
     [`(/ ,a ,b) `(frac (,(math-body->latexpression a)) (,(math-body->latexpression b)))]
     [`(+ ,a ,b) `(keep-flat (,(math-body->latexpression a) +  ,(math-body->latexpression b)))]
     [`(+ ,a ,b ...) `(keep-flat (,(math-body->latexpression a) + (,@(math-s-exp->latexpression `(+ ,@b)))))]
     [`(* ,a ,b) `(keep-flat (,(math-body->latexpression a) (times)  ,(math-body->latexpression b)))]
     [`(* ,a ,b ...) `(keep-flat (,(math-body->latexpression a) (times) (,@(math-s-exp->latexpression `(* ,@b)))))]
     [`(- ,a ,b) `(keep-flat (,(math-body->latexpression a) -  ,(math-body->latexpression b)))]
-    [`(- ,a ,b ...) `(keep-flat (,(math-body->latexpression a) - (,@(math-s-exp->latexpression `(- ,@b)))))]))
+    [`(- ,a ,b ...) `(keep-flat (,(math-body->latexpression a) - (,@(math-s-exp->latexpression `(- ,@b)))))]
+    [`(sqrt ,a) `(sqrt (,(math-body->latexpression a)))]
+    [`(sqr ,a) `(keep-flat (,(math-body->latexpression a) "^2"))]
+    [`(expt ,a ,e) `(keep-flat (,(math-body->latexpression a) "^{" ,(math-body->latexpression e) "}"))]))
 
 
-
-(define x '(/ 5 (+ 1 (+ 8 5 6 8 7))))
+#|
+(define x '(/ 5 (+ 1 (+ 8 5 (expt 6 98) 6 8 7))))
 (math-s-exp->latexpression x)
-(latexpression->string (math-s-exp->latexpression x))
+(latexpression->string (math-s-exp->latexpression x))|#
