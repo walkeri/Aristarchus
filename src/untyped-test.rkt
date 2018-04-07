@@ -50,7 +50,4 @@
   (check-equal? (L5 earth-sun)
                 (posn 74799550825.28027 -129557400406.15201)))
 
-(lagrange earth-sun)
-
-
-
+(L5-out earth-sun)

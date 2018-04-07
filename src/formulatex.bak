@@ -1,8 +1,7 @@
 #lang racket
 
 (require (for-syntax syntax/parse
-                     racket/syntax
-                     syntax/parse/class/paren-shape))
+                     racket/syntax))
 
 (provide
 
@@ -12,14 +11,12 @@
  ;; of LaTeX.
  formula)
 
-;;should use base namespace, but need to add sqr
 (define-syntax (formula stx)
   (syntax-parse stx
     [(_ name args body)
      #`(begin
          (define name (lambda args (eval `body (current-namespace))))
-         (define #,(format-id stx "~a-latex" #'name)
-           (lambda args (latexpression->string (math-s-exp->latexpression `body)))))]))
+         (define #,(format-id stx "~a-latex" #'name) (lambda args (latexpression->string (math-s-exp->latexpression `body)))))]))
 
 ;; For example:
 (formula ev (grav-const mass-body radius)
@@ -85,42 +82,18 @@
     [(number? m) m]
     [else (math-s-exp->latexpression m)]))
 
-(define-for-syntax (add-parens x)
-  `(|(| ,x |)|))
-
-(define-for-syntax (add-brackets x)
-  `(|[| ,x |]|))
-
 (define (math-s-exp->latexpression m)
   (match m
-    [`(/ ,a ,b)
-     `(frac (,(math-body->latexpression a)) (,(math-body->latexpression b)))]
-    [`(+ ,a ,b)
-     `(keep-flat (,(math-body->latexpression a) +  ,(math-body->latexpression b)))]
-    [`(+ ,a ,b ...)
-     `(keep-flat (,(math-body->latexpression a) + (,@(math-s-exp->latexpression `(+ ,@b)))))]
-    [`(* ,a ,b)
-     `(keep-flat (,(math-body->latexpression a) (times)  ,(math-body->latexpression b)))]
-    [`(* ,a ,b ...)
-     `(keep-flat (,(math-body->latexpression a) (times) (,@(math-s-exp->latexpression `(* ,@b)))))]
-    [`(- ,a ,b)
-     `(keep-flat (,(math-body->latexpression a) -  ,(math-body->latexpression b)))]
-    [`(- ,a ,b ...)
-     `(keep-flat (,(math-body->latexpression a) - (,@(math-s-exp->latexpression `(- ,@b)))))]
-    [`(sqrt ,a)
-     `(sqrt (,(math-body->latexpression a)))]
-    [`(sqr ,a)
-     `(keep-flat (,(math-body->latexpression a) "^2"))]
-    [`(expt ,a ,e)
-     `(keep-flat (,(math-body->latexpression a) "^{" ,(math-body->latexpression e) "}"))]
-    [`(posn ,x ,y)
-     `(keep-flat ("[" ,(math-body->latexpression x) "," ,(math-body->latexpression y) "]"))]
-    [`(|(| ,x |)|)
-     `(keep-flat ("(" ,(math-body->latexpression x) ")"))]
-    [`(add-parens ,x)
-     `(keep-flat ("(" ,(math-body->latexpression x) ")"))]
-    [`(add-brackets ,x)
-     `(keep-flat ("[" ,(math-body->latexpression x) "]"))]))
+    [`(/ ,a ,b) `(frac (,(math-body->latexpression a)) (,(math-body->latexpression b)))]
+    [`(+ ,a ,b) `(keep-flat (,(math-body->latexpression a) +  ,(math-body->latexpression b)))]
+    [`(+ ,a ,b ...) `(keep-flat (,(math-body->latexpression a) + (,@(math-s-exp->latexpression `(+ ,@b)))))]
+    [`(* ,a ,b) `(keep-flat (,(math-body->latexpression a) (times)  ,(math-body->latexpression b)))]
+    [`(* ,a ,b ...) `(keep-flat (,(math-body->latexpression a) (times) (,@(math-s-exp->latexpression `(* ,@b)))))]
+    [`(- ,a ,b) `(keep-flat (,(math-body->latexpression a) -  ,(math-body->latexpression b)))]
+    [`(- ,a ,b ...) `(keep-flat (,(math-body->latexpression a) - (,@(math-s-exp->latexpression `(- ,@b)))))]
+    [`(sqrt ,a) `(sqrt (,(math-body->latexpression a)))]
+    [`(sqr ,a) `(keep-flat (,(math-body->latexpression a) "^2"))]
+    [`(expt ,a ,e) `(keep-flat (,(math-body->latexpression a) "^{" ,(math-body->latexpression e) "}"))]))
 
 
 #|
