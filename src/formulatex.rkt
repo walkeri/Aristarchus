@@ -114,16 +114,16 @@
 
 (define-syntax (#%latex stx)
   (syntax-parse stx
-    [(_ / a b) #'`("\\frac{" ,(#%latex a) "}{" ,(#%latex b) "}")]
-    [(_ + a b) #'`(,(#%latex a) " + " ,(#%latex b))]
+    [(_ (/ a b)) #'`("\\frac{" ,(#%latex a) "}{" ,(#%latex b) "}")]
+    [(_ (+ a b)) #'`(,(#%latex a) " + " ,(#%latex b))]
     #;[(_ + a b ...) ...]
-    [(_ * a b) #'`(,(#%latex a) " \\times " ,(#%latex b))]
+    [(_ (* a b)) #'`(,(#%latex a) " \\times " ,(#%latex b))]
     #;[(_ * a b ...) ...]
-    [(_ - a b) #'`(,(#%latex a) " - " ,(#%latex b))]
+    [(_ (- a b)) #'`(,(#%latex a) " - " ,(#%latex b))]
     #;[(_ - a b ...) ...]
-    [(_ sqrt a) #'`("\\sqrt{" ,(#%latex a) "}")]
-    [(_ expt a e) #'`(,(#%latex a) " ^{ " ,(#%latex e) "}")]
-    [(_ posn x y) #'`("(" ,(#%latex x) "," ,(#%latex y) ")")]
+    [(_ (sqrt a)) #'`("\\sqrt{" ,(#%latex a) "}")]
+    [(_ (expt a e)) #'`(,(#%latex a) " ^{ " ,(#%latex e) "}")]
+    [(_ (posn x y)) #'`("(" ,(#%latex x) "," ,(#%latex y) ")")]
     [(_ (add-parens x)) #'`("(" ,(#%latex x) ")")]
     [(_ (add-brackets x)) #'`("[" ,(#%latex x) "]")]
     [(_ a) #'(convert-to-string a)]))
