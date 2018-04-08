@@ -21,6 +21,7 @@
  name
  Listof
  void
+ WebPage
 
  (rename-out [typed-datum #%datum]
              [typed-app #%app])
@@ -47,14 +48,32 @@
              [typed-connection-distance connection-distance]
              [typed-system system]
              [typed-surface-gravity surface-gravity]
+             [typed-surface-gravity-out surface-gravity-out]
              [typed-escape-velocity escape-velocity]
+             [typed-escape-velocity-out escape-velocity-out]
              [typed-kepler3-period kepler3-period]
+             [typed-kepler3-period-out kepler3-period-out]
              [typed-L1 L1]
+             [typed-L1-out L1-out]
              [typed-L2 L2]
+             [typed-L2-out L2-out]
              [typed-L3 L3]
+             [typed-L3-out L3-out]
              [typed-L4 L4]
+             [typed-L4-out L4-out]
              [typed-L5 L5]
-             [typed-lagrange lagrange])
+             [typed-L5-out L5-out]
+             [typed-lagrange lagrange]
+             [typed-seconds->days seconds->days]
+             [typed-days->seconds days->seconds]
+             [typed-hours->seconds hours->seconds]
+             [typed-seconds->hours seconds->hours]
+             [typed-minutes->seconds minutes->seconds]
+             [typed-seconds->minutes seconds->minutes]
+             [typed-kilometers->meters kilometers->meters]
+             [typed-meters->kilometers meters->kilometers]
+             [typed-meters->centimeters meters->centimeters]
+             [typed-centimeters->meters centimeters->meters])
 
  )
 
@@ -70,7 +89,8 @@
   time
   coordinate
   name
-  void)
+  void
+  WebPage)
 
 (define-type-constructor -> #:arity > 0)
 (define-type-constructor Listof #:arity > 0)
@@ -170,11 +190,23 @@
    ------------------------
    [⊢ (m:surface-gravity body-) ⇒ accel]])
 
+(define-typed-syntax typed-surface-gravity-out
+  [(_ body) ≫
+   [⊢ body ≫ body- ⇐ body-type]
+   ------------------------
+   [⊢ (m:surface-gravity-out body-) ⇒ WebPage]])
+
 (define-typed-syntax typed-escape-velocity
   [(_ body) ≫
    [⊢ body ≫ body- ⇐ body-type]
    ------------------------
    [⊢ (m:escape-velocity body-) ⇒ vel]])
+
+(define-typed-syntax typed-escape-velocity-out
+  [(_ body) ≫
+   [⊢ body ≫ body- ⇐ body-type]
+   ------------------------
+   [⊢ (m:escape-velocity-out body-) ⇒ WebPage]])
 
 (define-typed-syntax typed-kepler3-period
   [(_ connection) ≫
@@ -182,11 +214,23 @@
    ------------------------
    [⊢ (m:kepler3-period connection-) ⇒ time]])
 
+(define-typed-syntax typed-kepler3-period-out
+  [(_ connection) ≫
+   [⊢ connection ≫ connection- ⇐ connection-type]
+   ------------------------
+   [⊢ (m:kepler3-period-out connection-) ⇒ WebPage]])
+
 (define-typed-syntax typed-L1
   [(_ connection) ≫
    [⊢ connection ≫ connection- ⇐ connection-type]
    ------------------------
    [⊢ (m:L1 connection-) ⇒ coordinate]])
+
+(define-typed-syntax typed-L1-out
+  [(_ connection) ≫
+   [⊢ connection ≫ connection- ⇐ connection-type]
+   ------------------------
+   [⊢ (m:L1-out connection-) ⇒ WebPage]])
 
 (define-typed-syntax typed-L2
   [(_ connection) ≫
@@ -194,12 +238,24 @@
    ------------------------
    [⊢ (m:L2 connection-) ⇒ coordinate]])
 
+
+(define-typed-syntax typed-L2-out
+  [(_ connection) ≫
+   [⊢ connection ≫ connection- ⇐ connection-type]
+   ------------------------
+   [⊢ (m:L2-out connection-) ⇒ WebPage]])
+
 (define-typed-syntax typed-L3
   [(_ connection) ≫
    [⊢ connection ≫ connection- ⇐ connection-type]
    ------------------------
    [⊢ (m:L3 connection-) ⇒ coordinate]])
 
+(define-typed-syntax typed-L3-out
+  [(_ connection) ≫
+   [⊢ connection ≫ connection- ⇐ connection-type]
+   ------------------------
+   [⊢ (m:L3-out connection-) ⇒ WebPage]])
 
 (define-typed-syntax typed-L4
   [(_ connection) ≫
@@ -207,14 +263,87 @@
    ------------------------
    [⊢ (m:L4 connection-) ⇒ coordinate]])
 
+(define-typed-syntax typed-L4-out
+  [(_ connection) ≫
+   [⊢ connection ≫ connection- ⇐ connection-type]
+   ------------------------
+   [⊢ (m:L4-out connection-) ⇒ WebPage]])
+
 (define-typed-syntax typed-L5
   [(_ connection) ≫
    [⊢ connection ≫ connection- ⇐ connection-type]
    ------------------------
    [⊢ (m:L5 connection-) ⇒ coordinate]])
 
+(define-typed-syntax typed-L5-out
+  [(_ connection) ≫
+   [⊢ connection ≫ connection- ⇐ connection-type]
+   ------------------------
+   [⊢ (m:L5-out connection-) ⇒ WebPage]])
+
 (define-typed-syntax typed-lagrange
   [(_ connection) ≫
    [⊢ connection ≫ connection- ⇐ connection-type]
    ------------------------
    [⊢ (m:lagrange connection-) ⇒ void]])
+
+(define-typed-syntax typed-seconds->days
+  [(_ num) ≫
+   [⊢ num ≫ num- ⇐ time]
+   ------------------------
+   [⊢ (m:seconds->days num-) ⇒ time]])
+
+(define-typed-syntax typed-days->seconds
+  [(_ num) ≫
+   [⊢ num ≫ num- ⇐ time]
+   ------------------------
+   [⊢ (m:days->seconds num-) ⇒ time]])
+
+(define-typed-syntax typed-hours->seconds
+  [(_ num) ≫
+   [⊢ num ≫ num- ⇐ time]
+   ------------------------
+   [⊢ (m:hours->seconds num-) ⇒ time]])
+
+(define-typed-syntax typed-seconds->hours
+  [(_ num) ≫
+   [⊢ num ≫ num- ⇐ time]
+   ------------------------
+   [⊢ (m:seconds->hours num-) ⇒ time]])
+
+(define-typed-syntax typed-minutes->seconds
+  [(_ num) ≫
+   [⊢ num ≫ num- ⇐ time]
+   ------------------------
+   [⊢ (m:minutes->seconds num-) ⇒ time]])
+
+(define-typed-syntax typed-seconds->minutes
+  [(_ num) ≫
+   [⊢ num ≫ num- ⇐ time]
+   ------------------------
+   [⊢ (m:seconds->minutes num-) ⇒ time]])
+
+(define-typed-syntax typed-kilometers->meters
+  [(_ num) ≫
+   [⊢ num ≫ num- ⇐ time]
+   ------------------------
+   [⊢ (m:kilometers->meters num-) ⇒ time]])
+
+(define-typed-syntax typed-meters->kilometers
+  [(_ num) ≫
+   [⊢ num ≫ num- ⇐ length]
+   ------------------------
+   [⊢ (m:meters->kilometers num-) ⇒ length]])
+
+(define-typed-syntax typed-meters->centimeters
+  [(_ num) ≫
+   [⊢ num ≫ num- ⇐ length]
+   ------------------------
+   [⊢ (m:neters->centimeters num-) ⇒ length]])
+
+(define-typed-syntax typed-centimeters->meters
+  [(_ num) ≫
+   [⊢ num ≫ num- ⇐ length]
+   ------------------------
+   [⊢ (m:centimeters->meters num-) ⇒ length]])
+

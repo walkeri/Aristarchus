@@ -26,8 +26,7 @@
  ;; Body -> Number
  ;; Gets the radius of a body
  body-radius
- 
- 
+
  ;; Name Name Name Number -> #<procedure:Name>
  ;; Creates a connection between two bodies
  connection
@@ -57,26 +56,14 @@
  ;; Name -> Number
  ;; Calculates the surface gravity on a body 
  surface-gravity
-
- ;; Name -> Webpage
- ;; generates a webpage for surface-gravity
- surface-gravity-out
  
  ;; Name -> Number
  ;; Calculates the escape velocity from a body 
  escape-velocity
- 
- ;; Name -> Webpage
- ;; generates a webpage for escape-velocity
- escape-velocity-out
 
  ;; Connection -> Number
  ;; Calculates the period of orbit of a connection
  kepler3-period
-
- ;; Connection -> Number
- ;; generates a webpage for kepler3-period
- kepler3-period-out
 
  ;; Connection -> Posn
  ;; Calculates the L1 lagrange point of a connection
@@ -89,34 +76,18 @@
  ;; Connection -> Posn
  ;; Calculates the L2 lagrange point of a connection
  L2
- 
- ;; Connection -> Number
- ;; generates a webpage for L2
- L2-out 
 
  ;; Connection -> Posn
  ;; Calculates the L3 lagrange point of a connection
  L3
 
- ;; Connection -> Number
- ;; generates a webpage for L3
- L3-out
-
  ;; Connection -> Posn
  ;; Calculates the L3 lagrange point of a connection
  L4
 
- ;; Connection -> Number
- ;; generates a webpage for L4
- L4-out
-
  ;; Connection -> Posn
  ;; Calculates the L3 lagrange point of a connection
  L5
-
- ;; Connection -> Number
- ;; generates a webpage for L5
- L5-out
 
  ;; Connection -> VOID
  ;; displays all lagrange points of a connection
@@ -127,10 +98,50 @@
  ;; Converts seconds to days
  seconds->days
 
+ ;; Number -> Number
+ ;; Converts days to seconds
+ days->seconds
+
+ ;; Number -> Number
+ ;; Converts hours to seconds
+ hours->seconds
+
+ ;; Number -> Number
+ ;; Converts seconds to hours
+ seconds->hours
+
+ ;; Number -> Number
+ ;; Converts minutes to seconds
+ minutes->seconds
+
+ ;; Number -> Number
+ ;; Converts seconds to minutes
+ seconds->minutes
+
+ ;; Number -> Number
+ ;; Converts kilometers to meters
+ kilometers->meters
+
+ ;; Number -> Number
+ ;; Converts meters to kilometers
+ meters->kilometers
+
+ ;; Number -> Number
+ ;; Converts meters to centimeters
+ meters->centimeters
+
+ ;; Number -> Number
+ ;; Converts centimeters to meters
+ centimeters->meters
  
  )
 
 ;;------------------------------ Definitions ------------------------------------
+
+#;(struct posn [x y]
+    #:transparent)
+
+;; A WebPage is an outputted webpage to the user's default browser
 
 ;; A Name is a name of a body, represented as an identifier
 
@@ -195,27 +206,32 @@
 
 (define G 6.6740831e-11)
 
-(formula surface-gravity-internal (G mass radius)
-         (/ (* G mass) (sqr radius)))
+;;TODO: add a tutorial option
+(define (surface-gravity body #:mode [output 'answer])
+  (cond
+    [(symbol=? output 'answer) (surface-gravity-num body)]
+    [(symbol=? output 'webpage) (surface-gravity-out body)]))
 
 (formula surface-gravity-internal-sub (G mass radius)
-         (/ (* ,G ,mass) (sqr ,radius)))
+         (/ (* ,G ,mass) (expt ,radius 2)))
 
-(define (surface-gravity body)
-  (/ (* G (body-mass body)) (sqr (body-radius body))))
+(define (surface-gravity-num body)
+  (define mass (body-mass body))
+  (define radius (body-radius body))
+  (surface-gravity-internal-sub G mass radius))
 
 (define (surface-gravity-out body)
   (define mass (body-mass body))
   (define radius (body-radius body))
   (define name "surface gravity")
-  (define l-vars (surface-gravity-internal-latex G mass radius))
+  ;(define ans-name (string-append "$$" "g" "$$"))
+  (define l-vars (surface-gravity-internal-sub-latex G mass radius))
   (define lolt (list (list 'mass mass " kilograms")
                      (list 'radius radius " meters")))
   (define l-sub (surface-gravity-internal-sub-latex G mass radius))
   (define ans (surface-gravity body))
   (define ans-unit "meters / seconds^2")
   (generate-webpage name l-vars lolt l-sub ans ans-unit ))
-
 
 (formula escape-velocity-internal (G mass radius)
          (sqrt (/ (* 2 G mass) radius)))
@@ -230,6 +246,7 @@
   (define mass (body-mass body))
   (define radius (body-radius body))
   (define name "escape velocity ")
+  ;(define ans-name "v")
   (define l-vars (escape-velocity-internal-latex G mass radius))
   (define lolt (list (list 'mass mass " kilograms")
                      (list 'radius radius " meters")))
@@ -239,15 +256,15 @@
   (generate-webpage name l-vars lolt l-sub ans ans-unit))
 
 (formula kepler3-internal (G R mass)
-         (sqrt (/ (* 4 (sqr \\pi) (expt r 3))
+         (sqrt (/ (* 4 (expt \\pi 2) (expt r 3))
                   (* G mass))))
 
 (formula kepler3-internal-sub (G R mass)
-         (sqrt (/ (* 4 (sqr \\pi) (expt ,R 3))
+         (sqrt (/ (* 4 (expt \\pi 2) (expt ,R 3))
                   (* ,G ,mass))))
 
 (define (kepler3-period connect)
-  (sqrt (/ (* 4 (sqr pi) (expt (connection-distance connect) 3))
+  (sqrt (/ (* 4 (expt pi 2) (expt (connection-distance connect) 3))
            (* G (max (body-mass (connection-name1 connect))
                      (body-mass (connection-name2 connect)))))))
 
@@ -256,6 +273,7 @@
   (define mass (max (body-mass (connection-name1 connection))
                     (body-mass (connection-name2 connection))))
   (define name "kepler3-period")
+  ;(define ans-name "T")
   (define l-vars (kepler3-internal-latex G R mass))
   (define lolt (list (list 'R R " meters")
                      (list 'mass mass " kilograms")))
@@ -293,6 +311,7 @@
   (define α (/ M2 (+ M1 M2)))
   (define R (connection-distance connect))
   (define name "L1 point")
+  ;(define ans-name "(x, y)")
   (define l-vars (L1-internal-latex α R))
   (define lolt (list (list 'M_1 M1 "kilograms")
                      (list 'M_2 M2 "kilograms")
@@ -305,12 +324,12 @@
 
 (formula L2-internal (\\alpha R)
          (posn (* R
-                  (add-brackets (- 1 (expt (add-parens (/ ,\\alpha 3)) (/ 1 3)))))
+                  (add-brackets (- 1 (expt (add-parens (/ \\alpha 3)) (/ 1 3)))))
                0))
 
 (formula L2-internal-sub (\\alpha R)
          (posn (* ,R
-                  (add-brackets (- 1 (expt (add-parens (/ \\alpha 3)) (/ 1 3)))))
+                  (add-brackets (- 1 (expt (add-parens (/ ,\\alpha 3)) (/ 1 3)))))
                0))
 
 (define (L2 connect)
@@ -332,6 +351,7 @@
   (define α (/ M2 (+ M1 M2)))
   (define R (connection-distance connect))
   (define name "L2 point")
+  ;(define ans-name "(x, y)")
   (define l-vars (L2-internal-latex α R))
   (define lolt (list (list 'M_1 M1 "kilograms")
                      (list 'M_2 M2 "kilograms")
@@ -372,6 +392,7 @@
   (define α (/ M2 (+ M1 M2)))
   (define R (connection-distance connect))
   (define name "L3 point")
+  ;(define ans-name "(x, y)")
   (define l-vars (L3-internal-latex α R))
   (define lolt (list (list 'M_1 M1 "kilograms")
                      (list 'M_2 M2 "kilograms")
@@ -413,6 +434,7 @@
                   (body-mass (connection-name2 connect))))
   (define R (connection-distance connect))
   (define name "L4 point")
+  ;(define ans-name "(x, y)")
   (define l-vars (L4-internal-latex M1 M2 R))
   (define lolt (list (list 'M_1 M1 "kilograms")
                      (list 'M_2 M2 "kilograms")
@@ -453,6 +475,7 @@
                   (body-mass (connection-name2 connect))))
   (define R (connection-distance connect))
   (define name "L5 point")
+  ;(define ans-name "(x, y)")
   (define l-vars (L5-internal-latex M1 M2 R))
   (define lolt (list (list 'M_1 M1 "kilograms")
                      (list 'M_2 M2 "kilograms")
@@ -462,20 +485,42 @@
   (define ans-unit "meters")
   (generate-webpage name l-vars lolt l-sub ans ans-unit))
 
-(define-syntax lagrange
-  (syntax-parser
-    [(_ connect)
-     #'(make-matrix 5 5
-                    `(L1: x: ,(posn-x (L1 connect)) y: ,(posn-y (L1 connect))
-                          L2: x: ,(posn-x (L2 connect)) y: ,(posn-y (L2 connect))
-                          L3: x: ,(posn-x (L3 connect)) y: ,(posn-y (L3 connect))
-                          L4: x: ,(posn-x (L4 connect)) y: ,(posn-y (L4 connect))
-                          L5: x: ,(posn-x (L5 connect)) y: ,(posn-y (L5 connect))))]))
+(define (lagrange connect)
+  (make-matrix 5 5
+               `(L1: x: ,(posn-x (L1 connect)) y: ,(posn-y (L1 connect))
+                     L2: x: ,(posn-x (L2 connect)) y: ,(posn-y (L2 connect))
+                     L3: x: ,(posn-x (L3 connect)) y: ,(posn-y (L3 connect))
+                     L4: x: ,(posn-x (L4 connect)) y: ,(posn-y (L4 connect))
+                     L5: x: ,(posn-x (L5 connect)) y: ,(posn-y (L5 connect)))))
 
 ;;-------------------------------- Conversions ----------------------------------
 
-(define-syntax seconds->days
-  (syntax-parser
-    [(_ n)
-     #'(/ (/ (/ n 60) 60) 24)]))
+(define (seconds->days n)
+  (/ (/ (/ n 60) 60) 24))
 
+(define (days->seconds n)
+  (* (* (* n 24) 60) 60))
+
+(define (hours->seconds n)
+  (* (* n 60) 60))
+
+(define (seconds->hours n)
+  (/ (/ n 60) 60))
+
+(define (minutes->seconds n)
+  (* n 60))
+
+(define (seconds->minutes n)
+  (/ n 60))
+
+(define (kilometers->meters n)
+  (* 1000 n))
+
+(define (meters->kilometers n)
+  (/ n 1000))
+
+(define (meters->centimeters n)
+  (* 100 n))
+
+(define (centimeters->meters n)
+  (/ n 100))

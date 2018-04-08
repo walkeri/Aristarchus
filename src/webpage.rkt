@@ -1,18 +1,14 @@
 #lang racket
 
 (require xml
-         browser/external
-         "formulatex.rkt")
+         browser/external)
 
 
 (provide
-
- ;generate-formula
- ;generate-variables
- ;substitute
- ;answer
  generate-webpage
  posn
+ posn-x
+ posn-y
  )
 
 (struct posn [x y]
@@ -48,8 +44,7 @@
 ;; generates a variable with its associated value and unit
 (define (generate-one-variable lt)
   `(li "$$" ,(string-append (symbol->string (first lt)) ": ")
-       ,(number->string (second lt))
-       ,(third lt) "$$"))
+       ,(number->string (second lt))"$$"))
 
 ;; Latexpression -> xexpr
 ;; generates a latex formula with values substituted in 
@@ -58,15 +53,15 @@
 
 ;; Posn -> String
 ;; converts a posn to a string
-(define (posn->string p u)
-  (string-append "(" (number->string (posn-x p)) u "," (number->string (posn-y p)) u ")"))
+(define (posn->string p)
+  (string-append "(" (number->string (posn-x p)) "," (number->string (posn-y p)) ")"))
 
 ;; Number Unit -> xexpr
 ;; gives back the answer for question
-(define (answer n u)
+(define (answer n)
   (cond
-    [(number? n) `(p ,(string-append "$$" (number->string n) " " u "$$"))]
-    [(posn? n) `(p ,(string-append "$$" (posn->string n u) "$$"))]))
+    [(number? n) `(p ,(string-append "$$" (number->string n) "$$"))]
+    [else `(p ,(string-append "$$" (posn->string n) "$$"))]))
 
 (define for-latex
   "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML")
