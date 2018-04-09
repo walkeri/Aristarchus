@@ -1,12 +1,11 @@
 #lang racket
 
 (require xml
-         browser/external
-         "latex.rkt")
+         browser/external)
 
 
 (provide
- generate-webpage
+ (for-syntax generate-webpage)
  posn
  posn-x
  posn-y
@@ -69,30 +68,31 @@
 
 ;; String Latexpression [Listof LPair] Latexpression Number String -> xml
 ;; generates a webpage for a formula
-(define (generate-webpage name l-vars lop l-sub ans)
-  (with-output-to-file "../src/output.html"
-    #:exists 'replace
-    (lambda ()
-      (display-xml/content
-       (xexpr->xml
-        `(html
-          (head
-           (meta ((charset "utf-8")))
-           (meta ((name "viewport")
-                  (content "width=device-width")))
-           (title "Aristarchus")
-           (script ((type "text/javascript")
-                    (async "")
-                    (src ,for-latex))))
-          (body
-           (p ,(string-append "The formula for " name " " "is: "))
-           ,(generate-formula l-vars)
-           (p "Where: ")
-           ,(generate-variables lop)
-           (p "Substituting yields: ")
-           ,(substitute l-sub)
-           (p "Simplified: ")
-           ,(answer ans)))))))
-  (send-url "C:/Users/Isaac/Documents/GitHub/Aristarchus/src/output.html"))
+(define-for-syntax (generate-webpage name l-vars lop l-sub ans)
+  #`(begin
+      (with-output-to-file "../src/output.html"
+        #:exists 'replace
+        (lambda ()
+          (display-xml/content
+           (xexpr->xml
+            `(html
+              (head
+               (meta ((charset "utf-8")))
+               (meta ((name "viewport")
+                      (content "width=device-width")))
+               (title "Aristarchus")
+               (script ((type "text/javascript")
+                        (async "")
+                        (src ,for-latex))))
+              (body
+               (p ,(string-append "The formula for " name " " "is: "))
+               ,(generate-formula l-vars)
+               (p "Where: ")
+               ,(generate-variables lop)
+               (p "Substituting yields: ")
+               ,(substitute l-sub)
+               (p "Simplified: ")
+               ,(answer ans)))))))
+      (send-url "C:/Users/Isaac/Documents/GitHub/Aristarchus/src/output.html")))
 
 
