@@ -1,7 +1,8 @@
 #lang racket
 
 (require xml
-         browser/external)
+         browser/external
+         "latex.rkt")
 
 
 (provide
@@ -32,15 +33,15 @@
 ;; - "seconds"
 ;; - "meters / seconds^2 
 
-;; An LTriple is a (list Id Number Unit)
 
-;; [Listof LTriple] -> xexpr
+
+;; [Listof LPair] -> xexpr
 ;; generates a list of variables with their associated values and units
 (define (generate-variables l)
   (append `(ul
             ,@(map generate-one-variable l))))
 
-;; LTriple -> xexpr
+;; LPair -> xexpr
 ;; generates a variable with its associated value and unit
 (define (generate-one-variable lt)
   `(li "$$" ,(string-append (symbol->string (first lt)) ": ")
@@ -66,9 +67,9 @@
 (define for-latex
   "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML")
 
-;; String Latexpression [Listof LTriple] Latexpression Number String -> xml
+;; String Latexpression [Listof LPair] Latexpression Number String -> xml
 ;; generates a webpage for a formula
-(define (generate-webpage name l-vars LoLT l-sub ans ans-unit)
+(define (generate-webpage name l-vars lop l-sub ans)
   (with-output-to-file "../src/output.html"
     #:exists 'replace
     (lambda ()
@@ -87,11 +88,11 @@
            (p ,(string-append "The formula for " name " " "is: "))
            ,(generate-formula l-vars)
            (p "Where: ")
-           ,(generate-variables LoLT)
+           ,(generate-variables lop)
            (p "Substituting yields: ")
            ,(substitute l-sub)
            (p "Simplified: ")
-           ,(answer ans ans-unit)))))))
+           ,(answer ans)))))))
   (send-url "C:/Users/Isaac/Documents/GitHub/Aristarchus/src/output.html"))
 
 
