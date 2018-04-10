@@ -33,7 +33,7 @@
     [(_ ((~literal expt) (a ...) e)) #'(string-append "\\left( " (#%latex (a ...))
                                                       " \\right)^{" (#%latex e) "}")] 
     [(_ ((~literal expt) a e)) #'(string-append (#%latex a) "^{ " (#%latex e) " }")]
-    [(_ ((~literal posn #:phase 1) x y)) #'(string-append "(" (#%latex x) "," (#%latex y) ")")]
+    [(_ ((~literal posn) x y)) #'(string-append "posn(" (#%latex x) "," (#%latex y) ")")]
     [(_ a) #'(convert-to-string a)]))
 
 (define (convert-to-string x)
@@ -41,3 +41,7 @@
     [(string? x) x]
     [(symbol? x) (symbol->string x)]
     [(number? x) (number->string x)]))
+
+
+
+

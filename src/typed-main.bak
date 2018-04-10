@@ -1,6 +1,7 @@
 #lang turnstile/quicklang
 
-(require (prefix-in m: "main.rkt"))
+(require (prefix-in m: "untyped-main.rkt")
+         )
 
 (provide
 

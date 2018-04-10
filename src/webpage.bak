@@ -1,8 +1,7 @@
 #lang racket
 
 (require xml
-         browser/external
-         "built-in-structures.rkt")
+         browser/external)
 
 
 (provide
@@ -22,7 +21,6 @@
 ;; Generates a table row showing the assignment of the formula variables to values
 (define (assignment-row lt)
   `(tr (td ,(wrap-$$ (symbol->string (first lt))))
-       (td "=")
        (td ,(wrap-$$ (number->string (second lt))))))
 
 ;; String -> String
@@ -32,16 +30,11 @@
 (define MATH-JAX
   "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML")
 
-;; Latexpression [Listof LPair] Latexpression Number String -> xml
+;; String Latexpression [Listof LPair] Latexpression Number String -> xml
 ;; generates a webpage for a formula
 
-(define (generate-webpage formula-name with-variables lop with-values answer)
-  (begin
-    (define file-name
-      (string-append "C:/Users/Isaac/Documents/GitHub/Aristarchus/src/html/"
-                     (symbol->string (gensym))
-                     ".html"))
-    (with-output-to-file file-name
+(define (generate-webpage file-name formula-name with-variables lop with-values answer)
+  (with-output-to-file file-name
         #:exists 'replace
         (lambda ()
           (display-xml/content
@@ -63,14 +56,6 @@
                (p "Substitution yields: ")
                (p ,(wrap-$$ with-values))
                (p "Simplified: ")
-               (p ,(wrap-$$ (answer->string answer)))))))))
-      (send-url file-name)))
-
-(define (answer->string a)
-  (cond
-    [(number? a) (number->string a)]
-    [(posn? a) (posn->string a)]))
-
-(define (posn->string a)
-  (string-append "(" (number->string (posn-x a)) "," (number->string (posn-y a)) ")"))
+               (p ,(wrap-$$ (number->string answer)))))))))
+      (send-url "C:/Users/Isaac/Documents/GitHub/Aristarchus/src/output.html"))
 

@@ -4,7 +4,7 @@
 
 (define EPSILON (assign-unit 0.0001 number))
 
-(body sun (assign-unit 1.989e+30 distance) (assign-unit 6.957e+8 distance))
+(body sun (assign-unit 1.989e+30 mass) (assign-unit 6.957e+8 distance))
 
 (body earth (assign-unit 5.972e+24 mass) (assign-unit 6.3781e+6 distance))
 
@@ -36,3 +36,5 @@
 (check-type (L5 earth-sun) : coordinate)
 (check-type (L5-out earth-sun) : WebPage)
 (check-type (lagrange earth-sun) : void)
+
+;(L4-out earth-sun)

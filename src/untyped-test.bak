@@ -1,6 +1,4 @@
-#lang racket
-
-(require "main.rkt")
+#lang s-exp "untyped-main.rkt"
 
 (module+ test (require rackunit))
 
@@ -9,8 +7,6 @@
 (body sun 1.989e+30 6.957e+8)
 
 (body earth 5.972e+24 6.3781e+6)
-
-(body rectangle 5 5)
 
 (connection earth-sun sun earth 1.496e+11)
 
@@ -32,17 +28,17 @@
   (check-equal? (system-loname solar)
                 '(earth-sun))
   (check-equal? (< (- (surface-gravity sun) 274.2725)  EPSILON)
-                #true)
+                true)
   (check-equal? (< (- (surface-gravity earth) 9.807)  EPSILON)
-                #true)
+                true)
   (check-equal? (< (- (escape-velocity earth) 11179.5684)  EPSILON)
-                #true)
+                true)
   (check-equal? (< (- (escape-velocity sun) 617756.3135)  EPSILON)
-                #true)
+                true)
   (check-equal? (< (- (kepler3-period earth-sun) 31554700.4807) EPSILON)
-                #true)
+                true)
   (check-equal? (< (- (seconds->days (kepler3-period earth-sun)) 365.2164) EPSILON)
-                #true)
+                true)
   (check-equal? (L1 earth-sun)
                 (posn 148103583760.57556 0))
   (check-equal? (L2 earth-sun)
@@ -74,4 +70,5 @@
   (check-equal? (seconds->days 86400)
                 1))
 
-(kepler3-period 
+(surface-gravity earth
+                 #:mode 'webpage)
