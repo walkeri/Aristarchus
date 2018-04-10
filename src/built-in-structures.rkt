@@ -4,42 +4,25 @@
 
 (provide
 
- ;; Name Number Number -> #<procedure:Name>
+ (rename-out [body-struct-mass body-mass]
+             [body-struct-radius body-radius]
+             [connection-struct-name1 connection-name1]
+             [connection-struct-name2 connection-name2]
+             [connection-struct-distance connection-distance]
+             [system-struct-loname system-loname])
+ 
+ ;; Name Number Number -> VOID
  ;; Creates a body with a mass and radius
  body
-
- ;; Body -> Number
- ;; Gets the mass of a body
- body-mass
-
- ;; Body -> Number
- ;; Gets the radius of a body
- body-radius
-
- ;; Name Name Name Number -> #<procedure:Name>
+ 
+ ;; Name Name Name Number -> VOID
  ;; Creates a connection between two bodies
  connection
 
- ;; Connection -> Name
- ;; Gets the name of the first body
- connection-name1
-
- ;; Connection -> Name
- ;; Gets the name of the second body
- connection-name2
-
- ;; Connection -> Number
- ;; Gets the distance between the two bodies of the connection
- connection-distance
-
- ;; Name [Listof Name] -> #<procedure:Name>
+ ;; Name [Listof Name] -> VOID
  ;; Creates a system of connections
  system
-
- ;; System -> [Listof Name]
- ;; Gets the name of the system
- system-loname
-
+ 
  ;; A Posn is a (posn Number Number)
  
  ;; Number Number -> #<procedure:posn>
@@ -59,7 +42,7 @@
  posn?)
 
 (struct posn [x y]
-    #:transparent)
+  #:transparent)
 
 ;; A WebPage is an outputted webpage to the user's default browser
 
@@ -73,15 +56,15 @@
     [(_ name:id mass radius)
      #'(define name (body-struct mass radius))]))
 
-(define-syntax body-mass
-  (syntax-parser
-    [(_ body)
-     #'(body-struct-mass body)]))
+#;(define-syntax body-mass
+    (syntax-parser
+      [(_ body)
+       #'(body-struct-mass body)]))
 
-(define-syntax body-radius
-  (syntax-parser
-    [(_ body)
-     #'(body-struct-radius body)]))
+#;(define-syntax body-radius
+    (syntax-parser
+      [(_ body)
+       #'(body-struct-radius body)]))
 
 
 (struct connection-struct [name1 name2 distance])
