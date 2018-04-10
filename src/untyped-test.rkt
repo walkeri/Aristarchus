@@ -10,8 +10,6 @@
 
 (body earth 5.972e+24 6.3781e+6)
 
-(body rectangle 5 5)
-
 (connection earth-sun sun earth 1.496e+11)
 
 (define LoConnections1 '(earth-sun))
@@ -73,5 +71,3 @@
                 172800)
   (check-equal? (seconds->days 86400)
                 1))
-
-(kepler3-period 

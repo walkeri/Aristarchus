@@ -40,9 +40,22 @@
  ;; Gets the name of the system
  system-loname
 
+ ;; A Posn is a (posn Number Number)
+ 
+ ;; Number Number -> #<procedure:posn>
+ ;; Structure representing a coordinate pair
  posn
+
+ ;; Posn -> Number
+ ;; Gets the x-coordinate of a posn
  posn-x
+ 
+ ;; Posn -> Number
+ ;; Gets the y-coordinate of a posn
  posn-y
+
+ ;; Any -> Boolean
+ ;; is this a posn?
  posn?)
 
 (struct posn [x y]

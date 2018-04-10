@@ -1,0 +1,103 @@
+#lang racket
+
+(require (for-syntax syntax/parse)
+         htdp/matrix
+         "built-in-formulas.rkt")
+
+(provide
+
+ #%module-begin
+ #%datum
+ #%app
+ #%top-interaction
+ quote
+ list
+ 
+ (all-from-out "built-in-formulas.rkt")
+
+ ;; Connection -> VOID
+ ;; outputs all 5 of the lagrange points of a connection
+ ;; lagrange
+
+ ;; ---------------------------- Conversions ------------------------------------
+
+ ;; Number -> Number
+ ;; Converts seconds to days
+ seconds->days
+
+ ;; Number -> Number
+ ;; Converts days to seconds
+ days->seconds
+
+ ;; Number -> Number
+ ;; Converts hours to seconds
+ hours->seconds
+
+ ;; Number -> Number
+ ;; Converts seconds to hours
+ seconds->hours
+
+ ;; Number -> Number
+ ;; Converts minutes to seconds
+ minutes->seconds
+
+ ;; Number -> Number
+ ;; Converts seconds to minutes
+ seconds->minutes
+
+ ;; Number -> Number
+ ;; Converts kilometers to meters
+ kilometers->meters
+
+ ;; Number -> Number
+ ;; Converts meters to kilometers
+ meters->kilometers
+
+ ;; Number -> Number
+ ;; Converts meters to centimeters
+ meters->centimeters
+
+ ;; Number -> Number
+ ;; Converts centimeters to meters
+ centimeters->meters
+ )
+#;(define (lagrange connect)
+  (make-matrix 5 5
+               `(L1: x: ,(posn-x (L1 connect)) y: ,(posn-y (L1 connect))
+                     L2: x: ,(posn-x (L2 connect)) y: ,(posn-y (L2 connect))
+                     L3: x: ,(posn-x (L3 connect)) y: ,(posn-y (L3 connect))
+                     L4: x: ,(posn-x (L4 connect)) y: ,(posn-y (L4 connect))
+                     L5: x: ,(posn-x (L5 connect)) y: ,(posn-y (L5 connect)))))
+
+
+;;-------------------------------- Conversions ----------------------------------
+
+(define (seconds->days n)
+  (/ (/ (/ n 60) 60) 24))
+
+(define (days->seconds n)
+  (* (* (* n 24) 60) 60))
+
+(define (hours->seconds n)
+  (* (* n 60) 60))
+
+(define (seconds->hours n)
+  (/ (/ n 60) 60))
+
+(define (minutes->seconds n)
+  (* n 60))
+
+(define (seconds->minutes n)
+  (/ n 60))
+
+(define (kilometers->meters n)
+  (* 1000 n))
+
+(define (meters->kilometers n)
+  (/ n 1000))
+
+(define (meters->centimeters n)
+  (* 100 n))
+
+(define (centimeters->meters n)
+  (/ n 100))

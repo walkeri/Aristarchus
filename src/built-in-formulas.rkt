@@ -6,6 +6,7 @@
 (provide
 
  (all-from-out "built-in-structures.rkt")
+ 
  body
  connection
  system
@@ -41,9 +42,14 @@
  ;; Connection -> Posn
  ;; Calculates the L3 lagrange point of a connection
  L5
+ 
 )
 
+;; The gravitational constant
 (define G 6.6740831e-11)
+
+;; The speed of light
+(define c 299792458)
 
 (formula (surface-gravity body)
          ((G G) (M_b (body-mass body)) (r (body-radius body)))
@@ -114,5 +120,5 @@
                      (+ M1 M2)))
                (* -1 (/ (sqrt 3) 2) R)))
 
-
+#|https://map.gsfc.nasa.gov/ContentMedia/lagrange.pdf|#
 #|https://web.stanford.edu/~oas/SI/SRGR/notes/SchwarzschildSolution.pdf|#

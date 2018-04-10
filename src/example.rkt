@@ -1,5 +1,4 @@
-#lang s-exp "untyped-main.rkt"
-
+#lang s-exp "main.rkt"
 
 (body sun 1.989e+30 6.957e+8)
 
@@ -7,29 +6,12 @@
 
 (connection earth-sun sun earth 1.496e+11)
 
-
-(system solar (earth-sun))
-
-(body-mass sun)
-
-(body-radius sun)
-
-(connection-distance earth-sun)
-
-
-(surface-gravity sun)
-
 (surface-gravity earth)
 
-(escape-velocity earth)
+(escape-velocity sun)
 
 (kepler3-period earth-sun)
 
-(L1 earth-sun)
-(L2 earth-sun)
-(L3 earth-sun)
-(L4 earth-sun)
-(L5 earth-sun)
+(L1 earth-sun #:mode 'steps)
 
-(surface-gravity earth
-                 #:mode 'webpage)
+(lagrange earth-sun)

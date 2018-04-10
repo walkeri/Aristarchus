@@ -20,6 +20,8 @@
 ;; - (expt MSE MSE)
 ;; - (posn MSE MSE)
 
+;; MSE -> String
+;; Converts an MSE to its corresponding latex in string form.
 (define-syntax (#%latex stx)
   (syntax-parse stx
     [(_ ((~literal /) a b)) #'(string-append "\\frac{" (#%latex a) "}{" (#%latex b) "}")]
@@ -36,6 +38,8 @@
     [(_ ((~literal posn #:phase 1) x y)) #'(string-append "(" (#%latex x) "," (#%latex y) ")")]
     [(_ a) #'(convert-to-string a)]))
 
+;; [U String Symbol Number] -> String
+;; converts a string symbol or a number into their string representation
 (define (convert-to-string x)
   (cond
     [(string? x) x]

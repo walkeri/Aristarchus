@@ -29,6 +29,7 @@
 (define (wrap-$$ s)
   (string-append "$$" s "$$"))
 
+;; Location of JS library used for LaTeX rendering.
 (define MATH-JAX
   "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML")
 
@@ -66,11 +67,16 @@
                (p ,(wrap-$$ (answer->string answer)))))))))
       (send-url file-name)))
 
+;; Any -> String
+;; converts a number or a posn to a string, and errors if it is neither of those things
 (define (answer->string a)
   (cond
     [(number? a) (number->string a)]
-    [(posn? a) (posn->string a)]))
+    [(posn? a) (posn->string a)]
+    [else (error "Answer not a posn or a number.")]))
 
+;; Posn -> String
+;; converts a posn into a coordinate pair string.
 (define (posn->string a)
   (string-append "(" (number->string (posn-x a)) "," (number->string (posn-y a)) ")"))
 
