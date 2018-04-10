@@ -5,72 +5,36 @@
 
 
 (provide
- (for-syntax generate-webpage)
- posn
- posn-x
- posn-y
+
+ ;; String Symbol String [Listof LPair] String Number -> VOID
+ ;; 
+ generate-webpage
  )
-
-(struct posn [x y]
-  #:transparent)
-
-;; A Latexpression is one of:
-;; - String
-;; - Symbol
-;; - Number
-;; - (list 'keep-flat [Listof Latexpression])
-;; - (list Symbol [Listof Latexpression] ...)
-
-;; Latexpression-> xexpr
-;; generates a latex formula without values substituted in
-(define (generate-formula latex)
-  `(p ,(string-append "$$" latex "$$")))
-
-;; A Unit is one of:
-;; - "kilograms"
-;; - "meters"
-;; - "seconds"
-;; - "meters / seconds^2 
-
-
 
 ;; [Listof LPair] -> xexpr
 ;; generates a list of variables with their associated values and units
-(define (generate-variables l)
-  (append `(ul
-            ,@(map generate-one-variable l))))
+(define (assignment-table l)
+  `(table
+    ,@(map assignment-row l)))
 
 ;; LPair -> xexpr
-;; generates a variable with its associated value and unit
-(define (generate-one-variable lt)
-  `(li "$$" ,(string-append (symbol->string (first lt)) ": ")
-       ,(number->string (second lt))"$$"))
+;; Generates a table row showing the assignment of the formula variables to values
+(define (assignment-row lt)
+  `(tr (td ,(wrap-$$ (symbol->string (first lt))))
+       (td ,(wrap-$$ (number->string (second lt))))))
 
-;; Latexpression -> xexpr
-;; generates a latex formula with values substituted in 
-(define (substitute latex)
-  `(p ,(string-append "$$" latex "$$")))
+;; String -> String
+(define (wrap-$$ s)
+  (string-append "$$" s "$$"))
 
-;; Posn -> String
-;; converts a posn to a string
-(define (posn->string p)
-  (string-append "(" (number->string (posn-x p)) "," (number->string (posn-y p)) ")"))
-
-;; Number Unit -> xexpr
-;; gives back the answer for question
-(define (answer n)
-  (cond
-    [(number? n) `(p ,(string-append "$$" (number->string n) "$$"))]
-    [else `(p ,(string-append "$$" (posn->string n) "$$"))]))
-
-(define for-latex
+(define MATH-JAX
   "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML")
 
 ;; String Latexpression [Listof LPair] Latexpression Number String -> xml
 ;; generates a webpage for a formula
-(define-for-syntax (generate-webpage name l-vars lop l-sub ans)
-  #`(begin
-      (with-output-to-file "../src/output.html"
+
+(define (generate-webpage file-name formula-name with-variables lop with-values answer)
+  (with-output-to-file file-name
         #:exists 'replace
         (lambda ()
           (display-xml/content
@@ -83,16 +47,15 @@
                (title "Aristarchus")
                (script ((type "text/javascript")
                         (async "")
-                        (src ,for-latex))))
+                        (src ,MATH-JAX))))
               (body
-               (p ,(string-append "The formula for " name " " "is: "))
-               ,(generate-formula l-vars)
+               (p ,(string-append "The formula for " (symbol->string formula-name) " is: "))
+               (p ,(wrap-$$ with-variables))
                (p "Where: ")
-               ,(generate-variables lop)
-               (p "Substituting yields: ")
-               ,(substitute l-sub)
+               (p ,(assignment-table lop))
+               (p "Substitution yields: ")
+               (p ,(wrap-$$ with-values))
                (p "Simplified: ")
-               ,(answer ans)))))))
-      (send-url "C:/Users/Isaac/Documents/GitHub/Aristarchus/src/output.html")))
-
+               (p ,(wrap-$$ (number->string answer)))))))))
+      (send-url "C:/Users/Isaac/Documents/GitHub/Aristarchus/src/output.html"))
 

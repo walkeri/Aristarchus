@@ -3,17 +3,18 @@
 (require (for-syntax syntax/parse)
          (prefix-in un: racket)
          htdp/matrix
-         "formulatex.rkt"
-         "webpage.rkt")
+         "formula.rkt"
+         ;"webpage.rkt"
+         )
 
 (provide
 
- (all-from-out racket)
+ ;(all-from-out racket)
 
  ;;------------------------------ Definitions ----------------------------------
 
  ;; Number Number -> #<procedure:posn>
- posn
+ ;posn
  
  ;; Name Number Number -> #<procedure:Name>
  ;; Creates a body with a mass and radius
@@ -56,7 +57,7 @@
  ;; Name -> Number
  ;; Calculates the surface gravity on a body 
  surface-gravity
- 
+#| 
  ;; Name -> Number
  ;; Calculates the escape velocity from a body 
  escape-velocity
@@ -92,6 +93,8 @@
  ;; Connection -> VOID
  ;; displays all lagrange points of a connection
  lagrange
+
+|#
  ;; ---------------------------- Conversions ------------------------------------
 
  ;; Number -> Number
@@ -137,6 +140,8 @@
  )
 
 ;;------------------------------ Definitions ------------------------------------
+
+
 
 #;(struct posn [x y]
     #:transparent)
@@ -207,19 +212,23 @@
 (define G 6.6740831e-11)
 
 ;;TODO: add a tutorial option
-(define (surface-gravity body #:mode [output 'answer])
+#;(define (surface-gravity body #:mode [output 'answer])
   (cond
     [(symbol=? output 'answer) (surface-gravity-num body)]
     [(symbol=? output 'webpage) (surface-gravity-out body)]))
 
-(formula surface-gravity-internal-sub (G mass radius)
-         (/ (* ,G ,mass) (expt ,radius 2)))
-
+(formula surface-gravity
+         (body)
+         ((G G) (M_b (body-mass body)) (r (body-radius body)))
+         (/ (* G M_b) (expt r 2)))
+#|
+#;
 (define (surface-gravity-num body)
   (define mass (body-mass body))
   (define radius (body-radius body))
   (surface-gravity-internal-sub G mass radius))
 
+#;
 (define (surface-gravity-out body)
   (define mass (body-mass body))
   (define radius (body-radius body))
@@ -233,9 +242,10 @@
   (define ans-unit "meters / seconds^2")
   (generate-webpage name l-vars lolt l-sub ans ans-unit ))
 
+#;
 (formula escape-velocity-internal (G mass radius)
          (sqrt (/ (* 2 G mass) radius)))
-
+#;
 (formula escape-velocity-internal-sub (G mass radius)
          (sqrt (/ (* 2 ,G ,mass) ,radius)))
 
@@ -255,10 +265,12 @@
   (define ans-unit " meters / second")
   (generate-webpage name l-vars lolt l-sub ans ans-unit))
 
+#;
 (formula kepler3-internal (G R mass)
          (sqrt (/ (* 4 (expt \\pi 2) (expt r 3))
                   (* G mass))))
 
+#;
 (formula kepler3-internal-sub (G R mass)
          (sqrt (/ (* 4 (expt \\pi 2) (expt ,R 3))
                   (* ,G ,mass))))
@@ -281,12 +293,14 @@
   (define ans (kepler3-period connection))
   (define ans-unit "seconds")
   (generate-webpage name l-vars lolt l-sub ans ans-unit ))
-                 
+
+#;
 (formula L1-internal (\\alpha R)
          (posn (* R
                   (add-brackets (- 1 (expt (add-parens (/ \\alpha 3)) (/ 1 3)))))
                0))
 
+#;
 (formula L1-internal-sub (\\alpha R)
          (posn (* ,R
                   (add-brackets (- 1 (expt (add-parens (/ ,\\alpha 3)) (/ 1 3)))))
@@ -322,11 +336,13 @@
   (define ans-unit "meters")
   (generate-webpage name l-vars lolt l-sub ans ans-unit))
 
+#;
 (formula L2-internal (\\alpha R)
          (posn (* R
                   (add-brackets (- 1 (expt (add-parens (/ \\alpha 3)) (/ 1 3)))))
                0))
 
+#;
 (formula L2-internal-sub (\\alpha R)
          (posn (* ,R
                   (add-brackets (- 1 (expt (add-parens (/ ,\\alpha 3)) (/ 1 3)))))
@@ -362,11 +378,13 @@
   (define ans-unit "meters")
   (generate-webpage name l-vars lolt l-sub ans ans-unit))
 
+#;
 (formula L3-internal (\\alpha R)
          (posn (* (* -1 R)
                   (add-brackets (+ 1 (* (add-parens (/ 5 12)) \\alpha))))
                0))
 
+#;
 (formula L3-internal-sub (\\alpha R)
          (posn (* (* -1 ,R)
                   (add-brackets (+ 1 (* (add-parens (/ 5 12)) ,\\alpha))))
@@ -403,12 +421,14 @@
   (define ans-unit "meters")
   (generate-webpage name l-vars lolt l-sub ans ans-unit))
 
+#;
 (formula L4-internal (M1 M2 R)
          (posn (* (/ R 2)
                   (add-parens (/ (- M1 M2)
                                  (+ M1 M2))))
                (* (/ (sqrt 3) 2) R)))
 
+#;
 (formula L4-internal-sub (M1 M2 R)
          (posn (* (/ ,R 2)
                   (add-parens (/ (- ,M1 ,M2)
@@ -444,12 +464,14 @@
   (define ans-unit "meters")
   (generate-webpage name l-vars lolt l-sub ans ans-unit))
 
+#;
 (formula L5-internal (M1 M2 R)
          (posn (* (/ R 2)
                   (add-parens (/ (- M1 M2)
                                  (+ M1 M2))))
                (* (* -1 (/ (sqrt 3) 2)) R)))
 
+#;
 (formula L5-internal-sub (M1 M2 R)
          (posn (* (/ ,R 2)
                   (add-parens (/ (- ,M1 ,M2)
@@ -493,6 +515,7 @@
                      L4: x: ,(posn-x (L4 connect)) y: ,(posn-y (L4 connect))
                      L5: x: ,(posn-x (L5 connect)) y: ,(posn-y (L5 connect)))))
 
+|#
 ;;-------------------------------- Conversions ----------------------------------
 
 (define (seconds->days n)
