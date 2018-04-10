@@ -1,15 +1,17 @@
 #lang racket
 
 (require (for-syntax syntax/parse)
-         (prefix-in un: racket)
+         ;(prefix-in un: racket)
          htdp/matrix
-         "formula.rkt"
-         ;"webpage.rkt"
-         )
+         "formula.rkt")
 
 (provide
 
- ;(all-from-out racket)
+ #%module-begin
+ #%datum
+ #%app
+ #%top-interaction
+ quote
 
  ;;------------------------------ Definitions ----------------------------------
 
@@ -57,7 +59,7 @@
  ;; Name -> Number
  ;; Calculates the surface gravity on a body 
  surface-gravity
-#| 
+ 
  ;; Name -> Number
  ;; Calculates the escape velocity from a body 
  escape-velocity
@@ -69,7 +71,7 @@
  ;; Connection -> Posn
  ;; Calculates the L1 lagrange point of a connection
  L1
-
+#|
  ;; Connection -> Number
  ;; generates a webpage for L1
  L1-out
@@ -142,8 +144,8 @@
 ;;------------------------------ Definitions ------------------------------------
 
 
-
-#;(struct posn [x y]
+#;
+(struct posn [x y]
     #:transparent)
 
 ;; A WebPage is an outputted webpage to the user's default browser
@@ -211,94 +213,35 @@
 
 (define G 6.6740831e-11)
 
-;;TODO: add a tutorial option
-#;(define (surface-gravity body #:mode [output 'answer])
-  (cond
-    [(symbol=? output 'answer) (surface-gravity-num body)]
-    [(symbol=? output 'webpage) (surface-gravity-out body)]))
-
-(formula surface-gravity
-         (body)
+(formula (surface-gravity body)
          ((G G) (M_b (body-mass body)) (r (body-radius body)))
          (/ (* G M_b) (expt r 2)))
-#|
-#;
-(define (surface-gravity-num body)
-  (define mass (body-mass body))
-  (define radius (body-radius body))
-  (surface-gravity-internal-sub G mass radius))
 
-#;
-(define (surface-gravity-out body)
-  (define mass (body-mass body))
-  (define radius (body-radius body))
-  (define name "surface gravity")
-  ;(define ans-name (string-append "$$" "g" "$$"))
-  (define l-vars (surface-gravity-internal-sub-latex G mass radius))
-  (define lolt (list (list 'mass mass " kilograms")
-                     (list 'radius radius " meters")))
-  (define l-sub (surface-gravity-internal-sub-latex G mass radius))
-  (define ans (surface-gravity body))
-  (define ans-unit "meters / seconds^2")
-  (generate-webpage name l-vars lolt l-sub ans ans-unit ))
+(formula (escape-velocity body)
+         ((G G) (M_b (body-mass body)) (r (body-radius body)))
+         (sqrt (/ (* 2 G M_b) r)))
 
-#;
-(formula escape-velocity-internal (G mass radius)
-         (sqrt (/ (* 2 G mass) radius)))
-#;
-(formula escape-velocity-internal-sub (G mass radius)
-         (sqrt (/ (* 2 ,G ,mass) ,radius)))
-
-(define (escape-velocity body)
-  (sqrt (/ (* 2 G (body-mass body)) (body-radius body))))
-
-(define (escape-velocity-out body)
-  (define mass (body-mass body))
-  (define radius (body-radius body))
-  (define name "escape velocity ")
-  ;(define ans-name "v")
-  (define l-vars (escape-velocity-internal-latex G mass radius))
-  (define lolt (list (list 'mass mass " kilograms")
-                     (list 'radius radius " meters")))
-  (define l-sub (escape-velocity-internal-sub-latex G mass radius))
-  (define ans (escape-velocity body))
-  (define ans-unit " meters / second")
-  (generate-webpage name l-vars lolt l-sub ans ans-unit))
-
-#;
-(formula kepler3-internal (G R mass)
+(formula (kepler3-period conn)
+         ((G G) (M (max (body-mass (connection-name1 conn)) (body-mass (connection-name2 conn)))) (r (connection-distance conn)) (\\pi pi))
          (sqrt (/ (* 4 (expt \\pi 2) (expt r 3))
-                  (* G mass))))
+                  (* G M))))
+
+(struct posn (x y) #:transparent)
+
+(formula (L1 conn)
+          ((r (connection-distance conn))
+           (alpha (/ (min (body-mass (connection-name1 conn)) (body-mass (connection-name2 conn)))
+                       (+ (max (body-mass (connection-name1 conn)) (body-mass (connection-name2 conn)))
+                          (min (body-mass (connection-name1 conn)) (body-mass (connection-name2 conn)))))))
+          (/ (* r (- 1 (expt (/ alpha 3) (/ 1 3)))) 10))
+
+#|
+
+
 
 #;
-(formula kepler3-internal-sub (G R mass)
-         (sqrt (/ (* 4 (expt \\pi 2) (expt ,R 3))
-                  (* ,G ,mass))))
 
-(define (kepler3-period connect)
-  (sqrt (/ (* 4 (expt pi 2) (expt (connection-distance connect) 3))
-           (* G (max (body-mass (connection-name1 connect))
-                     (body-mass (connection-name2 connect)))))))
 
-(define (kepler3-period-out connection)
-  (define R (connection-distance connection))
-  (define mass (max (body-mass (connection-name1 connection))
-                    (body-mass (connection-name2 connection))))
-  (define name "kepler3-period")
-  ;(define ans-name "T")
-  (define l-vars (kepler3-internal-latex G R mass))
-  (define lolt (list (list 'R R " meters")
-                     (list 'mass mass " kilograms")))
-  (define l-sub (kepler3-internal-sub-latex G R mass))
-  (define ans (kepler3-period connection))
-  (define ans-unit "seconds")
-  (generate-webpage name l-vars lolt l-sub ans ans-unit ))
-
-#;
-(formula L1-internal (\\alpha R)
-         (posn (* R
-                  (add-brackets (- 1 (expt (add-parens (/ \\alpha 3)) (/ 1 3)))))
-               0))
 
 #;
 (formula L1-internal-sub (\\alpha R)

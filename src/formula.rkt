@@ -6,15 +6,20 @@
 
 (provide
 
+ ;posn posn-x posn-y
+ 
  formula)
+
+(struct posn (x y) #:transparent)
 
 (define-syntax (formula stx)
   (syntax-parse stx
-    [(_ name (arg ...) assoc-list form)
+    [(_ (name arg ...) assoc-list form)
      #'(define name (λ (arg ... #:mode [output 'answer])
                       (cond
                         [(symbol=? output 'answer) (answer assoc-list form)]
-                        [(symbol=? output 'steps) (steps 'name assoc-list form)])))]))
+                        [(symbol=? output 'steps) (steps 'name assoc-list form)]
+                        [else (error "unrecognized mode:" output)])))]))
 
 (define-syntax answer
   (syntax-parser
@@ -39,13 +44,12 @@
     [(_ ((a:id b) e ...) body)
      #'((lambda (a) (apply-as-symbols (e ...) body)) 'a)]))
 
-;;FIX THIS
 (define-syntax quote-firsts
   (syntax-parser
-    [(_  ((a b) (c d) (e f)))
-     #'`((a ,b) (c ,d) (e ,f))]))
-
-
+    [(_  ((a b)))
+     #'`((a ,b))]
+    [(_  ((a b) e ...))
+     #'`((a ,b) ,@(quote-firsts (e ...)))]))
 
 (define-syntax (steps stx)
   (syntax-parse stx
@@ -58,3 +62,4 @@
                          (answer association formula))]))
 
 
+;(apply-as-symbols ((r 100)) (#%latex (posn (* r (- 1 (expt (/ 55 3) (/ 1 3)))) 10)))

@@ -21,6 +21,7 @@
 ;; Generates a table row showing the assignment of the formula variables to values
 (define (assignment-row lt)
   `(tr (td ,(wrap-$$ (symbol->string (first lt))))
+       (td "=")
        (td ,(wrap-$$ (number->string (second lt))))))
 
 ;; String -> String
@@ -34,7 +35,8 @@
 ;; generates a webpage for a formula
 
 (define (generate-webpage file-name formula-name with-variables lop with-values answer)
-  (with-output-to-file file-name
+  (begin
+    (with-output-to-file file-name
         #:exists 'replace
         (lambda ()
           (display-xml/content
@@ -57,5 +59,5 @@
                (p ,(wrap-$$ with-values))
                (p "Simplified: ")
                (p ,(wrap-$$ (number->string answer)))))))))
-      (send-url "C:/Users/Isaac/Documents/GitHub/Aristarchus/src/output.html"))
+      (send-url file-name)))
 

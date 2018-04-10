@@ -26,14 +26,14 @@
     [(_ ((~literal +) a b)) #'(string-append (#%latex a) " + " (#%latex b))]
     [(_ ((~literal +) a b ...)) #'(string-append (#%latex a) " + " (#%latex (+ b ...)))]
     [(_ ((~literal *) a b)) #'(string-append (#%latex a) " \\times " (#%latex b))]
-    #;[(_ * a b ...) ...]
+    [(_ ((~literal *) a b ...)) #'(string-append (#%latex a) " \\times " (#%latex (* b ...)))]
     [(_ ((~literal -) a b)) #'(string-append (#%latex a) " - " (#%latex b))]
-    #;[(_ - a b ...) ...]
+    [(_ ((~literal -) a b ...)) #'(string-append (#%latex a) " - " (#%latex (- b ...)))]
     [(_ ((~literal sqrt) a)) #'(string-append "\\sqrt{" (#%latex a) "}")]
     [(_ ((~literal expt) (a ...) e)) #'(string-append "\\left( " (#%latex (a ...))
                                                       " \\right)^{" (#%latex e) "}")] 
     [(_ ((~literal expt) a e)) #'(string-append (#%latex a) "^{ " (#%latex e) " }")]
-    [(_ ((~literal posn) x y)) #'(string-append "(" (#%latex x) "," (#%latex y) ")")]
+    [(_ ((~literal posn) x y)) #'(string-append "posn(" (#%latex x) "," (#%latex y) ")")]
     [(_ a) #'(convert-to-string a)]))
 
 (define (convert-to-string x)
