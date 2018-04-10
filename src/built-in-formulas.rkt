@@ -42,7 +42,6 @@
  ;; Connection -> Posn
  ;; Calculates the L3 lagrange point of a connection
  L5
- 
 )
 
 ;; The gravitational constant
