@@ -118,6 +118,3 @@
                   (/ (- M1 M2)
                      (+ M1 M2)))
                (* -1 (/ (sqrt 3) 2) R)))
-
-#|https://map.gsfc.nasa.gov/ContentMedia/lagrange.pdf|#
-#|https://web.stanford.edu/~oas/SI/SRGR/notes/SchwarzschildSolution.pdf|#

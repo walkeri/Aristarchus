@@ -12,6 +12,4 @@
 
 (kepler3-period earth-sun)
 
-(L1 earth-sun #:mode 'steps)
-
-(lagrange earth-sun)
+(L1 earth-sun)

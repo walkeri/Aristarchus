@@ -1,7 +1,5 @@
 # Aristarchus
 
-## 
-
 A Mass is a Number
 
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -10,7 +8,7 @@ A Radius is a Number
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-A Name is an unbound identifier
+A Name is an unbound Identifier
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -141,7 +139,11 @@ Finds the L5 lagrange point of an orbital system. The output is a `posn`.
 
 ex: `(L5 earth-sun) -> (posn 74799550825.28027 129557400406.15201)`
 
------------------------------------------------------------------------------------------------------------------------------------
+----
+
+For a derivation of Lagrange point calculations:
+
+​	https://map.gsfc.nasa.gov/ContentMedia/lagrange.pdf
 
 ## Formula:
 
@@ -149,7 +151,7 @@ An arg is an identifier.
 
 ----
 
-An Association list is a [(identifier any) ...].
+ 	An Association list is a [(identifier any) ...].
 
 ------
 
