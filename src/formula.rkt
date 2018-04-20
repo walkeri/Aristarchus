@@ -53,12 +53,17 @@
 
 ;; Association-List MSE -> Any
 ;; Given an Association-List, bind each identifier to its quoted form in the body
-(define-syntax apply-as-symbols
+#;(define-syntax apply-as-symbols
   (syntax-parser
     [(_ ((a:id b)) body)
      #'((lambda (a) body) 'a)]
     [(_ ((a:id b) e ...) body)
      #'((lambda (a) (apply-as-symbols (e ...) body)) 'a)]))
+
+(define-syntax apply-as-symbols
+  (syntax-parser
+    [(_ ((a:id b) ...) body)
+     #'(let ((a 'a) ...) body)]))
 
 ;; Association-List -> Association-List
 ;; evaluates the second of all the pairs in an Association-List

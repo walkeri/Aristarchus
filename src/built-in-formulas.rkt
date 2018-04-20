@@ -1,7 +1,8 @@
 #lang racket
 
 (require "formula.rkt"
-         "built-in-structures.rkt")
+         "built-in-structures.rkt"
+         "latex.rkt")
 
 (provide
 
@@ -22,7 +23,8 @@
  ;; Connection -> Number
  ;; Calculates the period of orbit of a connection
  kepler3-period
- 
+
+ #|
  ;; Connection -> Posn
  ;; Calculates the L1 lagrange point of a connection
  L1
@@ -42,6 +44,7 @@
  ;; Connection -> Posn
  ;; Calculates the L3 lagrange point of a connection
  L5
+ |#
 )
 
 ;; The gravitational constant
@@ -64,6 +67,7 @@
          (sqrt (/ (* 4 (expt \\pi 2) (expt r 3))
                   (* G M))))
 
+#|
 (formula (L1 connect)
          ((\\alpha (/ (min (body-mass (connection-name1 connect))
                            (body-mass (connection-name2 connect)))
@@ -118,3 +122,4 @@
                   (/ (- M1 M2)
                      (+ M1 M2)))
                (* -1 (/ (sqrt 3) 2) R)))
+|#
