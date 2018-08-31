@@ -10,6 +10,6 @@
 
 (escape-velocity sun)
 
-(kepler3-period earth-sun)
+(kepler3-period earth-sun #:mode 'steps)
 
 (L1 earth-sun)

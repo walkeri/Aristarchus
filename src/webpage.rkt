@@ -39,7 +39,7 @@
 (define (generate-webpage formula-name with-variables lop with-values answer)
   (begin
     (define file-name
-      (string-append "C:/Users/Isaac/Documents/GitHub/Aristarchus/src/html/"
+      (string-append "/home/isaac/Aristarchus/src/html/"
                      (symbol->string (gensym))
                      ".html"))
     (with-output-to-file file-name
